@@ -3,6 +3,7 @@ import json
 from tweepy import Cursor
 from tweepy import API
 import pandas as pd
+import time
 ############# Twitter Client #############
 class TwitterClient():
     def __init__(self, twitter_user=None):
@@ -64,9 +65,14 @@ class TwitterStreamer():
     def __init__(self):
         pass
     def stream_tweets(self, auth,listener, keywords):
-        myStream = tweepy.Stream(auth=auth, listener=listener)
-        myStream.filter(track=keywords,languages=["en"])
-        # myStream.filter(languages=["en"])
+        while True:
+            myStream = tweepy.Stream(auth=auth, listener=listener)
+            try:
+                myStream.filter(track=keywords,languages=["en"])
+            except:
+                time.sleep(200)
+                pass
+            # myStream.filter(languages=["en"])
 
 ############# Twitter Stream Listener #############
 class TwitterListener(tweepy.StreamListener):
@@ -80,9 +86,12 @@ class TwitterListener(tweepy.StreamListener):
         print(df.head(5))
 
     def on_error(self, status_code):
-        if status_code == 420:
-            # returning False in on_data disconnects the stream
-            return False
+        time.spleep(200)
+        pass
+        # if status_code == 420:
+        #     # returning False in on_data disconnects the stream
+        #     time.sleep(200)
+        #     pass
 
 class TweetData():
     def __init__(self,df):
@@ -130,15 +139,16 @@ if __name__ == '__main__':
     # print(twitter_client.get_followers(5))
     # # streamer = TwitterStreamer()
     # # streamer.stream_tweets(api.auth,myStreamListener,keywords)
-    df = pd.DataFrame(columns=['Tweet', 'Tweet ID', 'Auther ID', 'User', 'Num_retweets', 'HashTags used',
-                               'Follower Count'])
+    df = pd.DataFrame( columns=['Tweet', 'Tweet ID', 'Author ID', 'Num_retweets', 'Hashtags','followers_IDs'])
     filename = 'scraped_tweets_stream.csv'
     # we will save our database as a CSV file.
     # df.to_csv(filename)
     tweetData = TweetData(df)
     twitter_clinet = TwitterClient()
     api = twitter_clinet.get_twitter_client_api()
-    keywords = ['idiot']
+    # thses keywords are taken from below website
+    # https://www.mcafee.com/blogs/consumer/family-safety/no-one-likes-many-ways-kids-bully-one-another-online/
+    keywords = ['idiot','fuck','cry','ugly','stupid','fat','annoying','kill yourself','Dirl','Gcad','Foad','Fugly','IHML','KMS','KYS','FUB','GCAD','IWTKM','JLMA']
     myStreamListener = TwitterListener()
     streamer = TwitterStreamer()
     streamer.stream_tweets(api.auth, myStreamListener, keywords)
