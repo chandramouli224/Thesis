@@ -146,7 +146,7 @@ if __name__ == '__main__':
     tweetData = TweetData(df)
     twitter_clinet = TwitterClient()
     api = twitter_clinet.get_twitter_client_api()
-    # thses keywords are taken from below website
+    # these keywords are taken from below website
     # https://www.mcafee.com/blogs/consumer/family-safety/no-one-likes-many-ways-kids-bully-one-another-online/
     keywords = ['idiot','fuck','cry','ugly','stupid','fat','annoying','kill yourself','Dirl','Gcad','Foad','Fugly','IHML','KMS','KYS','FUB','GCAD','IWTKM','JLMA','bully', 'bullied', 'bullying']
     myStreamListener = TwitterListener()
